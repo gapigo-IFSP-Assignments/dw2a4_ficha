@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        This is an example of a memory leak. A new property is added to the cache
+        object 10 times/second. The value of performance.memory.usedJSHeapSize
+        steadily increases.
+
+        Since the value of cache[key] is easy to recalculate, we might want to free
+        that memory if it becomes low. However, there is no way to do that...
+
+        Another method to manually clear the cache could be added, but manually
+        adding memory checks adds a lot of extra code and overhead. It would be
+        nice if we could clear the cache automatically only when memory became low.
+
+        Thus the solution presented at Google I/O!
+        */
+
+        (function(w){
+            var cache = {}
+            function getCachedThing(key) {
+                if(!(key in cache)) {
+                    cache[key] = key;
+                }
+                return cache[key];
+            }
+
+            var i = 0;
+            setInterval(function() {
+                getCachedThing(i++);
+            }, 100);
+            w.getCachedThing = getCachedThing
+        })(window);
+
+    </script>
+</body>
+</html>

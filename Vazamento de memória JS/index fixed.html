@@ -1,0 +1,39 @@
+<html>
+<head>
+	<script src="jquery-2.1.4.js"></script>
+</head>
+<body>
+<div id="navbar"><span>Red Stapler - Memory Leak</span></div>
+<div id="wrapper">
+
+	<button id="leak-button">Start</button>
+	<button id="stop-button">Stop</button>
+
+</div>
+<script>
+	
+	let running = false;
+	
+	
+	
+	$('#leak-button').click(function(){
+
+		let x = [];
+		
+		function grow() {
+		x.push(new Array(1000000).join('x'));
+		console.log('A');
+		if(running)
+			setTimeout(grow, 1000);
+		}
+
+		running = true;
+		grow();
+	});
+	
+	$('#stop-button').click(function(){
+		running = false;
+	});
+</script>
+</body>
+</html>
